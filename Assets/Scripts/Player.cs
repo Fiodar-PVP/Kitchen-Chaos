@@ -3,6 +3,14 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance { get; private set; }
+
+    public event EventHandler<OnSelectedCounterChangedEventArg> OnSelectedCounterChanged;
+    public class OnSelectedCounterChangedEventArg : EventArgs
+    {
+        public ClearCounter selectedCounter;
+    }
+
     [Header("Movement variables")]
     [SerializeField] private float playerSize = 0.7f;
     [SerializeField] private float playerHeight = 2f;
@@ -16,38 +24,41 @@ public class Player : MonoBehaviour
     [SerializeField] private GameInput gameInput;
 
     private Vector3 lastInteractionDirection;
+    private ClearCounter selectedCounter;
 
     public bool IsWalking { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Debug.LogError("There are more than one Player Instance!");
+        }
+
+        Instance = this;
+    }
 
     private void Start()
     {
         gameInput.OnInteractAction += GameInput_OnInteractAction;
     }
 
-    private void GameInput_OnInteractAction(object sender, EventArgs e)
-    {
-        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
-
-        Vector3 moveDirection = new Vector3(inputVector.x, 0f, inputVector.y);
-
-        if (moveDirection != Vector3.zero)
-        {
-            lastInteractionDirection = moveDirection;
-        }
-
-        if (Physics.Raycast(transform.position, lastInteractionDirection, out RaycastHit raycastHit, interactionDistance, countersLayerMask))
-        {
-            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
-            {
-                clearCounter.Interact();
-            }
-        }
-    }
-
     private void Update()
     {
         HandleMovement();
         HandleInteraction();
+    }
+
+    /// <summary>
+    /// Handles the interaction action triggered by the player. If a counter is currently selected, 
+    /// it calls the Interact method on the selected counter.
+    /// </summary>
+    private void GameInput_OnInteractAction(object sender, EventArgs e)
+    {
+        if (selectedCounter != null)
+        {
+            selectedCounter.Interact();
+        }
     }
 
     /// <summary>
@@ -70,9 +81,35 @@ public class Player : MonoBehaviour
         {
             if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
             {
-                //clearCounter.Interact();
+                //Raycast hit object with attached ClearCounter component
+                if(clearCounter != selectedCounter)
+                {
+                    SetSelectedCounter(clearCounter);
+                }
+            }
+            else
+            {
+                //Raycast hit something but it's not type of ClearCounter
+                SetSelectedCounter(null);
             }
         }
+        else
+        {
+            //Raycast did not hit anything
+            SetSelectedCounter(null);
+        }
+    }
+
+    /// <summary>
+    /// Sets the currently selected counter and triggers the OnSelectedCounterChanged event to notify listeners
+    /// that the selected counter has changed.
+    /// </summary>
+    /// <param name="selectedCounter">The counter to be set as the currently selected counter.</param>
+    private void SetSelectedCounter(ClearCounter selectedCounter)
+    {
+        this.selectedCounter = selectedCounter;
+
+        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArg { selectedCounter = selectedCounter });
     }
 
     /// <summary>
@@ -128,7 +165,6 @@ public class Player : MonoBehaviour
             transform.forward = Vector3.Slerp(transform.forward, moveDirection, rotateSpeed * Time.deltaTime);
 
     }
-
 
     /// <summary>
     /// Checks if the player can move in the given direction by performing a CapsuleCast.

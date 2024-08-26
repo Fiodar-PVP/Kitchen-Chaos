@@ -1,16 +1,61 @@
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [Header("Movement variables")]
     [SerializeField] private float playerSize = 0.7f;
     [SerializeField] private float playerHeight = 2f;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotateSpeed = 10f;
+
+    [Header("Interaction variables")]
+    [SerializeField] private float interactionDistance = 2f;
+    [SerializeField] private LayerMask countersLayerMask;
+
     [SerializeField] private GameInput gameInput;
+
+    private Vector3 lastInteractionDirection;
 
     public bool IsWalking { get; private set; }
 
     private void Update()
+    {
+        HandleMovement();
+        HandleInteraction();
+    }
+
+    /// <summary>
+    /// Handles player interactions with nearby objects by performing a Raycast in the direction of movement.
+    /// If the player is moving, updates the last interaction direction. If the Raycast hits an interactable
+    /// object, triggers interaction with that object.
+    /// </summary>
+    private void HandleInteraction()
+    {
+        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
+
+        Vector3 moveDirection = new Vector3(inputVector.x, 0f, inputVector.y);
+
+        if(moveDirection != Vector3.zero)
+        {
+            lastInteractionDirection = moveDirection;
+        }
+
+        if (Physics.Raycast(transform.position, lastInteractionDirection, out RaycastHit raycastHit, interactionDistance, countersLayerMask))
+        {
+            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+            {
+                clearCounter.Interact();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handles the player's movement by checking input direction, determining if movement is possible,
+    /// and moving the player accordingly. If movement in the initial direction is blocked,
+    /// attempts are made to move along the X or Z axis individually.
+    /// </summary>
+    private void HandleMovement()
     {
         Vector2 inputVector = gameInput.GetMovementVectorNormalized();
 
@@ -51,11 +96,12 @@ public class Player : MonoBehaviour
         if (canMove)
             transform.position += moveDirection * moveDistance;
 
-        //Rotates the player to match the current moveDirection
-        if(moveDirection != Vector3.zero)
-            transform.forward = Vector3.Slerp(transform.forward, moveDirection, rotateSpeed * Time.deltaTime);
-        
         IsWalking = moveDirection != Vector3.zero;
+
+        //Rotates the player to match the current moveDirection
+        if (moveDirection != Vector3.zero)
+            transform.forward = Vector3.Slerp(transform.forward, moveDirection, rotateSpeed * Time.deltaTime);
+
     }
 
 

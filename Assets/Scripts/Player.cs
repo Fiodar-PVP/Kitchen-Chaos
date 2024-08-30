@@ -8,7 +8,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     public event EventHandler<OnSelectedCounterChangedEventArg> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEventArg : EventArgs
     {
-        public ClearCounter selectedCounter;
+        public BaseCounter selectedCounter;
     }
 
     [Header("Movement variables")]
@@ -25,7 +25,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     [SerializeField] private Transform kitchenObjectHoldPoint;
 
     private Vector3 lastInteractionDirection;
-    private ClearCounter selectedCounter;
+    private BaseCounter selectedCounter;
     private KitchenObject kitchenObject;
 
     public bool IsWalking { get; private set; }
@@ -81,17 +81,17 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
         if (Physics.Raycast(transform.position, lastInteractionDirection, out RaycastHit raycastHit, interactionDistance, countersLayerMask))
         {
-            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+            if (raycastHit.transform.TryGetComponent(out BaseCounter baseCounter))
             {
-                //Raycast hit object with attached ClearCounter component
-                if(clearCounter != selectedCounter)
+                //Raycast hit object with attached BaseCounter component
+                if(baseCounter != selectedCounter)
                 {
-                    SetSelectedCounter(clearCounter);
+                    SetSelectedCounter(baseCounter);
                 }
             }
             else
             {
-                //Raycast hit something but it's not type of ClearCounter
+                //Raycast hit something but it's not type of BaseCounter
                 SetSelectedCounter(null);
             }
         }
@@ -107,7 +107,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     /// that the selected counter has changed.
     /// </summary>
     /// <param name="selectedCounter">The counter to be set as the currently selected counter.</param>
-    private void SetSelectedCounter(ClearCounter selectedCounter)
+    private void SetSelectedCounter(BaseCounter selectedCounter)
     {
         this.selectedCounter = selectedCounter;
 

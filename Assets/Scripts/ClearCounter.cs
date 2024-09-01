@@ -5,23 +5,36 @@ public class ClearCounter : BaseCounter
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
 
     /// <summary>
-    /// Handles interaction logic between the player and the kitchen object.
-    /// If the kitchen object is not present, it instantiates one at the countertop point.
-    /// If a kitchen object already exists, it is given to the player.
+    /// Handles the interaction between the player and the kitchen counter. 
+    /// This method checks whether there is a kitchen object on the counter 
+    /// and whether the player is holding a kitchen object, and acts accordingly.
     /// </summary>
-    /// <param name="player">The Player interacting with the kitchen object.</param>
+    /// <param name="player">The player interacting with the kitchen counter.</param>
     public override void Interact(Player player)
     {
         if (!HasKitchenObject())
         {
-            Transform kitchenObjectSOTransform = Instantiate(kitchenObjectSO.prefab);
-            kitchenObjectSOTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(this);
+            //There is no kitchen object on counter
+            if (player.HasKitchenObject())
+                //Player has a kitchen object. Put it on counter.
+                player.GetKitchenObject().SetKitchenObjectParent(this);
+            else
+            {
+                //Player does not have a kitchen object
+            }
         }
         else
         {
-            //Give kitchen object to Player
-            GetKitchenObject().SetKitchenObjectParent(player);
+            //There is a kitchen object on counter
+            if (player.HasKitchenObject())
+            {
+                //Player has a kitchen object
+            }
+            else
+            {
+                //Player does not have a kitchen object. Give him a kitchen object.
+                GetKitchenObject().SetKitchenObjectParent(player);
+            }
         }
     }
-
 }

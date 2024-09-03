@@ -54,7 +54,10 @@ public class CuttingCounter : BaseCounter
                 //Player does not have a kitchen object. Give him a kitchen object.
                 GetKitchenObject().SetKitchenObjectParent(player);
 
-                ResetCuttingProgress(player);
+                OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs
+                {
+                    progressNormalized = 0f
+                }) ;
             }
         }
     }

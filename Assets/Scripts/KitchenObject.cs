@@ -61,6 +61,41 @@ public class KitchenObject : MonoBehaviour
         Destroy(gameObject);
     }
 
+    /// <summary>
+    /// Attempts to retrieve the object as a PlateKitchenObject if possible.
+    /// </summary>
+    /// <param name="plateKitchenObject">
+    /// The PlateKitchenObject that will be assigned if the object is a PlateKitchenObject.
+    /// </param>
+    /// <returns>
+    /// Returns true if the object is a PlateKitchenObject, otherwise returns false.
+    /// </returns>
+    public bool TryGetPlate(out PlateKitchenObject plateKitchenObject)
+    {
+        if(this is PlateKitchenObject)
+        {
+            plateKitchenObject = this as PlateKitchenObject;
+            return true;
+        }
+        else
+        {
+            plateKitchenObject = null;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Spawns a KitchenObject using the provided KitchenObjectSO and sets its parent.
+    /// </summary>
+    /// <param name="kitchenObjectSO">
+    /// The KitchenObjectSO that contains the prefab and data for the KitchenObject to be spawned.
+    /// </param>
+    /// <param name="kitchenObjectParent">
+    /// The parent object (implementing IKitchenObjectParent) to assign to the spawned KitchenObject.
+    /// </param>
+    /// <returns>
+    /// Returns the spawned KitchenObject instance.
+    /// </returns>
     public static KitchenObject SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)
     {
         Transform kitchenObjectSOTransform = Instantiate(kitchenObjectSO.prefab);

@@ -1,5 +1,9 @@
+using System;
+
 public class TrashCounter : BaseCounter
 {
+    public static EventHandler OnAnyObjectTrashed;
+
     /// <summary>
     /// Handles the interaction between the player and the trash counter. 
     /// This method checks whether player has a kitchen object and if so
@@ -12,6 +16,8 @@ public class TrashCounter : BaseCounter
         {
             //Player has a kitchen object;
             player.GetKitchenObject().DestroySelf();
+
+            OnAnyObjectTrashed?.Invoke(this, EventArgs.Empty);
         }
     }
 }

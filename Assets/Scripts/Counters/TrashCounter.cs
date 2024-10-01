@@ -3,6 +3,11 @@ using System;
 public class TrashCounter : BaseCounter
 {
     public static EventHandler OnAnyObjectTrashed;
+    new public static void ResetStaticData()
+    {
+        OnAnyObjectTrashed = null;
+
+    }
 
     /// <summary>
     /// Handles the interaction between the player and the trash counter. 

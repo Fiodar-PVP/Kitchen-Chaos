@@ -17,5 +17,8 @@ public class MainMenuUI : MonoBehaviour
         {
             Application.Quit();
         });
+
+        //Make sure to unpause the game after leaving GameScene through Pause menu
+        Time.timeScale = 1.0f;
     }
 }

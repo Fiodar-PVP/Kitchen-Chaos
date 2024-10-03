@@ -37,7 +37,7 @@ public class StoveCounter : BaseCounter, IHasProgress
 
     private void Update()
     {
-        if(HasKitchenObject())
+        if (HasKitchenObject())
         {
             switch (state)
             {
@@ -170,9 +170,9 @@ public class StoveCounter : BaseCounter, IHasProgress
                 OnStateChanged?.Invoke(this, new OnStateChangedEventArgs { state = state });
 
                 OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
-                    {
-                        progressNormalized = 0
-                    });
+                {
+                    progressNormalized = 0
+                });
             }
         }
     }
@@ -216,5 +216,10 @@ public class StoveCounter : BaseCounter, IHasProgress
         }
 
         return null;
+    }
+
+    public bool IsFried()
+    {
+        return state == State.Fried;
     }
 }

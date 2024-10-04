@@ -1,9 +1,19 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameOverUI : MonoBehaviour
 {
+    [SerializeField] private Button playAgainButton;
     [SerializeField] private TextMeshProUGUI recipesDeliveredText;
+
+    private void Awake()
+    {
+        playAgainButton.onClick.AddListener(() =>
+        {
+            Loader.Load(Loader.Scene.MainMenuScene);
+        });    
+    }
 
     private void Start()
     {
@@ -29,6 +39,8 @@ public class GameOverUI : MonoBehaviour
     private void Show()
     {
         gameObject.SetActive(true);
+
+        playAgainButton.Select();
     }
 
     private void Hide()

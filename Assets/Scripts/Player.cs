@@ -152,7 +152,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         {
             //Attempt only X movement
             Vector3 moveDirectionX = new Vector3(moveDirection.x, 0, 0).normalized;
-            canMove = moveDirection.x != 0 && CheckIfCanMoveInDirection(moveDistance, moveDirectionX);
+            canMove = Mathf.Abs(moveDirection.x) > 0.5f && CheckIfCanMoveInDirection(moveDistance, moveDirectionX);
 
             if (canMove)
                 //Can move only on X
@@ -163,7 +163,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
                 //Attempt only Z movement
                 Vector3 moveDirectionZ = new Vector3(0, 0, moveDirection.z).normalized;
-                canMove = moveDirection.z != 0 && CheckIfCanMoveInDirection(moveDistance, moveDirectionZ);
+                canMove = Mathf.Abs(moveDirection.z) > 0.5f && CheckIfCanMoveInDirection(moveDistance, moveDirectionZ);
 
                 if (canMove)
                     //Can move only on Z

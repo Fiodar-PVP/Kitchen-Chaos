@@ -145,7 +145,7 @@ public class GameInput : MonoBehaviour
                 }
             case Binding.Gamepad_InteractAlternate:
                 {
-                    inputAction = playerInputActions.Player.Pause;
+                    inputAction = playerInputActions.Player.InteractAlternate;
                     bindingIndex = 1;
                     break;
                 }

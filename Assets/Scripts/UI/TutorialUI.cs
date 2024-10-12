@@ -23,6 +23,9 @@ public class TutorialUI : MonoBehaviour
         UpdateVisual();
 
         Show();
+
+        //DEBUG DISABLING TUTORIAL UI TO PREVENT RACE START CONDITIONS WITH KITCHEN GAME MANAGER
+        Hide();
     }
 
     private void KitchenGameManager_OnStateChanged(object sender, EventArgs e)

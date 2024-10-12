@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerAnimator : MonoBehaviour
+public class PlayerAnimator : NetworkBehaviour
 {
     private const string IS_WALKING = "IsWalking";
 
@@ -19,6 +18,8 @@ public class PlayerAnimator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) return;
+
         playerAnimator.SetBool(IS_WALKING, player.IsWalking);   
     }
 }

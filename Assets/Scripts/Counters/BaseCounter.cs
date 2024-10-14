@@ -1,4 +1,5 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
@@ -37,7 +38,7 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     {
         this.kitchenObject = kitchenObject;
 
-        if(kitchenObject != null)
+        if (kitchenObject != null)
         {
             OnAnyObjectPlacedHere?.Invoke(this, EventArgs.Empty);
         }
@@ -56,5 +57,11 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     public bool HasKitchenObject()
     {
         return kitchenObject != null;
+    }
+
+    public NetworkObject GetNetworkObject()
+    {
+        //Not updating counters to NetworkBehavior yet. Only making spawn objects work correctly!
+        return null;
     }
 }

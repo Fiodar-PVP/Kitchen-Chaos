@@ -6,7 +6,7 @@ using UnityEngine;
 /// Represents a base counter in the kitchen, capable of holding and interacting with kitchen objects.
 /// Implements the IKitchenObjectParent interface.
 /// </summary>
-public class BaseCounter : MonoBehaviour, IKitchenObjectParent
+public class BaseCounter : NetworkBehaviour, IKitchenObjectParent
 {
     public static EventHandler OnAnyObjectPlacedHere;
 
@@ -61,7 +61,6 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 
     public NetworkObject GetNetworkObject()
     {
-        //Not updating counters to NetworkBehavior yet. Only making spawn objects work correctly!
-        return null;
+        return NetworkObject;
     }
 }

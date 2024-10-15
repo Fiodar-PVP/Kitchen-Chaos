@@ -37,12 +37,12 @@ public class KitchenGameMultiplayer : NetworkBehaviour
         kitchenObject.SetKitchenObjectParent(kitchenObjectParent);
     }
 
-    private int GetKitchenObjectSOIndex(KitchenObjectSO kitchenObjectSO)
+    public int GetKitchenObjectSOIndex(KitchenObjectSO kitchenObjectSO)
     {
         return kitchenObjectListSO.kitchenObjectSOList.IndexOf(kitchenObjectSO);
     }
 
-    private KitchenObjectSO GetKitchenObjectSOFromIndex(int kitchenObjectSOIndex)
+    public KitchenObjectSO GetKitchenObjectSOFromIndex(int kitchenObjectSOIndex)
     {
         return kitchenObjectListSO.kitchenObjectSOList[kitchenObjectSOIndex];
     }
@@ -55,19 +55,19 @@ public class KitchenGameMultiplayer : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void DestroyKitchenObjectServerRpc(NetworkObjectReference kitchenObjectNetworkObjectReference)
     {
-        kitchenObjectNetworkObjectReference.TryGet(out NetworkObject kitchenObjectParentNetworkObject);
-        KitchenObject kithcenObject = kitchenObjectParentNetworkObject.GetComponent<KitchenObject>();
+        kitchenObjectNetworkObjectReference.TryGet(out NetworkObject kitchenObjectNetworkObject);
+        KitchenObject kitchenObject = kitchenObjectNetworkObject.GetComponent<KitchenObject>();
 
         DestroyKitchenObjectClientRpc(kitchenObjectNetworkObjectReference);
-        kithcenObject.DestroySelf();
+        kitchenObject.DestroySelf();
     }
 
     [ClientRpc]
     private void DestroyKitchenObjectClientRpc(NetworkObjectReference kitchenObjectNetworkObjectReference)
     {
-        kitchenObjectNetworkObjectReference.TryGet(out NetworkObject kitchenObjectParentNetworkObject);
-        KitchenObject kithcenObject = kitchenObjectParentNetworkObject.GetComponent<KitchenObject>();
+        kitchenObjectNetworkObjectReference.TryGet(out NetworkObject kitchenObjectNetworkObject);
+        KitchenObject kitchenObject = kitchenObjectNetworkObject.GetComponent<KitchenObject>();
 
-        kithcenObject.ClearKitchenObjectOnParent();
+        kitchenObject.ClearKitchenObjectOnParent();
     }
 }

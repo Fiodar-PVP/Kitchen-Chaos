@@ -18,19 +18,16 @@ public class TutorialUI : MonoBehaviour
     private void Start()
     {
         GameInput.Instance.OnBindingRebind += GameInput_OnBindingRebind;
-        KitchenGameManager.Instance.OnStateChanged += KitchenGameManager_OnStateChanged;
+        KitchenGameManager.Instance.OnLocalPlayerReady += KitchenGameManager_OnLocalPlayerReady;
 
         UpdateVisual();
 
         Show();
-
-        //DEBUG DISABLING TUTORIAL UI TO PREVENT RACE START CONDITIONS WITH KITCHEN GAME MANAGER
-        Hide();
     }
 
-    private void KitchenGameManager_OnStateChanged(object sender, EventArgs e)
+    private void KitchenGameManager_OnLocalPlayerReady(object sender, EventArgs e)
     {
-        if(KitchenGameManager.Instance.IsCountdownToStartActive())
+        if(KitchenGameManager.Instance.IsLocalPlayerReady())
         {
             Hide();
         }

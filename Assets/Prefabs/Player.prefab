@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 6385283239494953579}
   - component: {fileID: -2324943632358151660}
   - component: {fileID: 8309294980036148853}
-  m_Layer: 0
+  - component: {fileID: 4029216669904332137}
+  m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51,13 +52,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSize: 0.7
-  playerHeight: 2
   moveSpeed: 7
   rotateSpeed: 10
+  spawnPositionList:
+  - {x: 2, y: 0, z: 0}
+  - {x: -2, y: 0, z: 0}
+  - {x: 2, y: 0, z: -2}
+  - {x: -2, y: 0, z: -2}
   interactionDistance: 2
   countersLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  collisionsLayerMask:
+    serializedVersion: 2
+    m_Bits: 192
   kitchenObjectHoldPoint: {fileID: 7492243929007449464}
 --- !u!114 &6385283239494953579
 MonoBehaviour:
@@ -113,6 +121,27 @@ MonoBehaviour:
   ScaleThreshold: 0.01
   InLocalSpace: 0
   Interpolate: 1
+--- !u!65 &4029216669904332137
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591427150449672614}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.7, y: 1, z: 0.7}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &765859951081633090
 GameObject:
   m_ObjectHideFlags: 0

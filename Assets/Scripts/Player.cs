@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -22,19 +23,21 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 
     [Header("Movement variables")]
     [SerializeField] private float playerSize = 0.7f;
-    [SerializeField] private float playerHeight = 2f;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotateSpeed = 10f;
+    [SerializeField] private List<Vector3> spawnPositionList;
 
     [Header("Interaction variables")]
     [SerializeField] private float interactionDistance = 2f;
     [SerializeField] private LayerMask countersLayerMask;
+    [SerializeField] private LayerMask collisionsLayerMask;
 
     [SerializeField] private Transform kitchenObjectHoldPoint;
 
     private Vector3 lastInteractionDirection;
     private BaseCounter selectedCounter;
     private KitchenObject kitchenObject;
+
 
     public bool IsWalking { get; private set; }
 
@@ -50,6 +53,8 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         {
             LocalInstance = this;
         }
+
+        transform.position = spawnPositionList[(int)OwnerClientId];
 
         OnAnyPlayerSpawned?.Invoke(this, EventArgs.Empty);
     }
@@ -206,7 +211,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
     /// </returns>
     private bool CheckIfCanMoveInDirection(float moveDistance, Vector3 moveDirection)
     {
-        return !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerSize, moveDirection, moveDistance);
+        return !Physics.BoxCast(transform.position, Vector3.one*playerSize, moveDirection, Quaternion.identity, moveDistance, collisionsLayerMask);
     }
 
     public Transform GetKitchenObjectFollowTransform()

@@ -30,6 +30,7 @@ public class KitchenGameManager : NetworkBehaviour
     private float gamePlayingTimerMax = 90.0f;
     private bool isLocalGamePaused = false;
     private bool isLocalPlayerReady = false;
+    private bool autoCheckGamePauseState = false;
 
     private NetworkVariable<State> state = new NetworkVariable<State>(State.WaitingToStart);
 
@@ -51,6 +52,16 @@ public class KitchenGameManager : NetworkBehaviour
     {
         state.OnValueChanged += State_OnValueChanged;
         isGamePaused.OnValueChanged += IsGamePaused_OnValueChanged;
+
+        if (IsServer)
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectCallback;
+        }
+    }
+
+    private void NetworkManager_OnClientDisconnectCallback(ulong clientId)
+    {
+        autoCheckGamePauseState = true;
     }
 
     private void State_OnValueChanged(State previousValue, State newValue)
@@ -138,6 +149,15 @@ public class KitchenGameManager : NetworkBehaviour
                 break;
             case State.GameOver:
                 break;
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if(autoCheckGamePauseState)
+        {
+            autoCheckGamePauseState = false;
+            CheckGamePauseState();
         }
     }
 

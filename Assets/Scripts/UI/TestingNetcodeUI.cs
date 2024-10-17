@@ -12,13 +12,13 @@ public class TestingNetcodeUI : MonoBehaviour
         hostButton.onClick.AddListener(() =>
         {
             Debug.Log("HOST");
-            NetworkManager.Singleton.StartHost();
+            KitchenGameMultiplayer.Instance.StartHost();
             Hide();
         });
         clientButton.onClick.AddListener(() => 
         {
             Debug.Log("Client");
-            NetworkManager.Singleton.StartClient();
+            KitchenGameMultiplayer.Instance.StartClient();
             Hide();
         });
     }

@@ -107,6 +107,13 @@ public class CuttingCounter : BaseCounter, IHasProgress
     [ServerRpc(RequireOwnership = false)]
     private void CutObjectServerRpc()
     {
+        if (!HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO()))
+        {
+            //Run check in case client sends a lot of Rpc due to high ping
+            //and the object has been already cut on server side
+            return;
+        }
+
         CutObjectClientRpc();
     }
 
@@ -129,6 +136,13 @@ public class CuttingCounter : BaseCounter, IHasProgress
     [ServerRpc(RequireOwnership = false)]
     private void CuttingProgressDoneServerRpc()
     {
+        if (!HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO()))
+        {
+            //Run check in case client sends a lot of Rpc due to high ping
+            //and the object has been already cut on server side
+            return;
+        }
+
         CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
 
         if (cuttingProgress >= cuttingRecipeSO.cuttingProgressMax)

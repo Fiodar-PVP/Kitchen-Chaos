@@ -19,6 +19,8 @@ public class DeliveryManager : NetworkBehaviour
     private float spawnRecipeTimerMax = 4f;
     private int waitingRecipesMax = 4;
     private int successfullyDeliveredRecipies;
+    //Used to ensure that recipe is delivered only once on Server Side
+    private int waitingRecipeSOListCount;
 
     private void Awake()
     {
@@ -50,6 +52,7 @@ public class DeliveryManager : NetworkBehaviour
     {
         RecipeSO waitingRecipeSO = recipeListSO.recipeSOList[waitingRecipeSOIndex];
         waitingRecipeSOList.Add(waitingRecipeSO);
+        waitingRecipeSOListCount = waitingRecipeSOList.Count;
 
         OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
     }
@@ -89,8 +92,8 @@ public class DeliveryManager : NetworkBehaviour
                 if (plateContentsMatchesRecipe)
                 {
                     //Player delivered the correct recipe!
-                    DeliverCorrectRecipeServerRpc(i);
-
+                    DeliverCorrectRecipeServerRpc(i, waitingRecipeSOListCount);
+                    waitingRecipeSOListCount = -1;
                     return;
                 }
             }
@@ -102,8 +105,15 @@ public class DeliveryManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void DeliverCorrectRecipeServerRpc(int waitingRecipeSOListIndex)
+    private void DeliverCorrectRecipeServerRpc(int waitingRecipeSOListIndex, int waitingRecipeSOListCount)
     {
+        if (waitingRecipeSOList.Count != waitingRecipeSOListCount)
+        {
+            //Run check in case client sends a lot of Rpc due to high ping
+            //and the recipe already has been removed on Server side
+            return;
+        }
+        
         DeliverCorrectRecipeClientRpc(waitingRecipeSOListIndex);
     }
 

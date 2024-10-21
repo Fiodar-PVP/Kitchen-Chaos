@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class LobbyUI : MonoBehaviour
 {
+    public static LobbyUI Instance { get; private set; }
+
     [SerializeField] private Button mainMenuButton;
     [SerializeField] private Button createLobbyButton;
     [SerializeField] private Button quickJoinButton;
@@ -19,6 +21,8 @@ public class LobbyUI : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
+
         mainMenuButton.onClick.AddListener(() =>
         {
             KitchenGameLobby.Instance.LeaveLobby();
@@ -42,6 +46,7 @@ public class LobbyUI : MonoBehaviour
         });
 
         lobbyTemplate.gameObject.SetActive(false);
+        SelectCreateLobbyButton();
     }
 
     private void Start()
@@ -77,6 +82,11 @@ public class LobbyUI : MonoBehaviour
             templateTransform.gameObject.SetActive(true);
             templateTransform.GetComponent<LobbyListSingleUI>().SetLobby(lobby);
         }
+    }
+
+    public void SelectCreateLobbyButton()
+    {
+        createLobbyButton.Select();
     }
 
     private void OnDestroy()

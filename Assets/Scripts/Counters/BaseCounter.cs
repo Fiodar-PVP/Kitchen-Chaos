@@ -1,11 +1,12 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
 /// Represents a base counter in the kitchen, capable of holding and interacting with kitchen objects.
 /// Implements the IKitchenObjectParent interface.
 /// </summary>
-public class BaseCounter : MonoBehaviour, IKitchenObjectParent
+public class BaseCounter : NetworkBehaviour, IKitchenObjectParent
 {
     public static EventHandler OnAnyObjectPlacedHere;
 
@@ -37,7 +38,7 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     {
         this.kitchenObject = kitchenObject;
 
-        if(kitchenObject != null)
+        if (kitchenObject != null)
         {
             OnAnyObjectPlacedHere?.Invoke(this, EventArgs.Empty);
         }
@@ -56,5 +57,10 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     public bool HasKitchenObject()
     {
         return kitchenObject != null;
+    }
+
+    public NetworkObject GetNetworkObject()
+    {
+        return NetworkObject;
     }
 }

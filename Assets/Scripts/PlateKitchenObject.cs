@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class PlateKitchenObject : KitchenObject
@@ -14,8 +15,10 @@ public class PlateKitchenObject : KitchenObject
 
     private List<KitchenObjectSO> kitchenObjectSOList;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         kitchenObjectSOList = new List<KitchenObjectSO>();
     }
 
@@ -27,18 +30,15 @@ public class PlateKitchenObject : KitchenObject
             return false;
         }
 
-        if(kitchenObjectSOList.Contains(kitchenObjectSO))
+        if (kitchenObjectSOList.Contains(kitchenObjectSO))
         {
             //Already has this type
             return false;
         }
         else
         {
-            kitchenObjectSOList.Add(kitchenObjectSO);
-            OnIngridientAdded?.Invoke(this, new OnIngridientAddedEventArgs
-            {
-                kitchenObjectSO = kitchenObjectSO
-            }) ;
+            AddIngridientServerRpc(KitchenGameMultiplayer.Instance.GetKitchenObjectSOIndex(kitchenObjectSO));
+
             return true;
         }
     }
@@ -46,5 +46,22 @@ public class PlateKitchenObject : KitchenObject
     public List<KitchenObjectSO> GetKitchenObjectSOList()
     {
         return kitchenObjectSOList;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void AddIngridientServerRpc(int kitchenObjectSOIndex)
+    {
+        AddIngridientClientRpc(kitchenObjectSOIndex);
+    }
+
+    [ClientRpc]
+    private void AddIngridientClientRpc(int kitchenObjectSOIndex)
+    {
+        KitchenObjectSO kitchenObjectSO = KitchenGameMultiplayer.Instance.GetKitchenObjectSOFromIndex(kitchenObjectSOIndex);
+        kitchenObjectSOList.Add(kitchenObjectSO);
+        OnIngridientAdded?.Invoke(this, new OnIngridientAddedEventArgs
+        {
+            kitchenObjectSO = kitchenObjectSO
+        });
     }
 }

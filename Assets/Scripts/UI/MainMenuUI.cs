@@ -4,14 +4,21 @@ using UnityEngine.UI;
 
 public class MainMenuUI : MonoBehaviour
 {
-    [SerializeField] private Button playButton;
+    [SerializeField] private Button multiplayerButton;
+    [SerializeField] private Button singleplayerButton;
     [SerializeField] private Button quitButton;
 
     private void Awake()
     {
-        playButton.onClick.AddListener(()=>
+        multiplayerButton.onClick.AddListener(()=>
         {
-            Loader.Load(Loader.Scene.GameScene);
+            KitchenGameMultiplayer.playMultiplayer = true;
+            Loader.Load(Loader.Scene.LobbyScene);
+        });
+        singleplayerButton.onClick.AddListener(() =>
+        {
+            KitchenGameMultiplayer.playMultiplayer = false;
+            Loader.Load(Loader.Scene.LobbyScene);
         });
         quitButton.onClick.AddListener(() =>
         {
@@ -21,6 +28,6 @@ public class MainMenuUI : MonoBehaviour
         //Make sure to unpause the game after leaving GameScene through Pause menu
         Time.timeScale = 1.0f;
 
-        playButton.Select();
+        multiplayerButton.Select();
     }
 }

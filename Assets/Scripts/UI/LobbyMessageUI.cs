@@ -70,6 +70,8 @@ public class LobbyMessageUI : MonoBehaviour
         Show();
 
         responseMessageText.text = message;
+
+        closeButton.Select();
     }
 
     private void Show()
@@ -80,6 +82,8 @@ public class LobbyMessageUI : MonoBehaviour
     private void Hide()
     {
         gameObject.SetActive(false);
+
+        LobbyUI.Instance.SelectCreateLobbyButton();
     }
 
     private void OnDestroy()
